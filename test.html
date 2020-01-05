@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Socket IO test</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js" integrity="sha256-i2Orhi397HWPn93rsCUTW8HBoso65vY/VNTllm9Kuqo=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <input placeholder="Match ID" id="createMatch">
+        <button onclick="createMatch($('createMatch').value)">Create Match</button>
+        <input placeholder="Match ID" id="joinMatch">
+        <button onclick="joinMatch($('joinMatch').value)">Join Match</button>
+        <script>
+            $ = id => {
+                return document.getElementById(id);
+            };
+            const socket = io('http://localhost:5050/');
+            joinMatch = match => {
+                socket.emit('joinMatch', match);
+                socket.emit('getMatches');
+            };
+            createMatch = match => {
+                socket.emit('createMatch', match);
+                socket.emit('getMatches');
+            };
+            socket.on('returnMatches', matches => console.log(matches));
+            socket.on('joinError', error => console.error(error));
+            socket.on('createError', error => console.error(error));
+        </script>
+    </body>
+</html>
